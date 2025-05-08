@@ -16,11 +16,9 @@ import io.github.sceneview.math.Direction
 import io.github.sceneview.math.Position
 import io.github.sceneview.math.Size
 import io.github.sceneview.node.ModelNode
-
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainFragment(private val exoPlayer: ExoPlayer) : Fragment(R.layout.fragment_main) {
 
     lateinit var sceneView: ARSceneView
-
     val augmentedImageNodes = mutableListOf<AugmentedImageNode>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,16 +57,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                                         ExoPlayerNode(
                                             engine = engine,
                                             materialLoader = materialLoader,
-                                            exoPlayer = ExoPlayer.Builder(requireContext()).build().apply {
-                                                setMediaItem(MediaItem.fromUri("https://d3krfb04kdzji1.cloudfront.net/chorro-quevedo-video-ia.mp4"))
-                                                prepare()
-                                                playWhenReady = true
-                                                repeatMode = Player.REPEAT_MODE_ALL
-                                            },
-                                            size = Size(0.5f, 0.3f, 0.0f), // 50x30 cm
-                                            normal = Direction(z = -1.0f) // que mire hacia el usuario
+                                            exoPlayer = exoPlayer,
+                                            size = Size(0.5f, 0.3f, 0.0f),
+                                            normal = Direction()
                                         )
                                     )
+                                    exoPlayer.playWhenReady = true // Iniciar reproducción
                                 }
                             }
                         }

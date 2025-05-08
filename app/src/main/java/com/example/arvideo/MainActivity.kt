@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.commit
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.common.Player
 import android.app.Activity
 import android.view.View
 import androidx.core.graphics.Insets
@@ -17,6 +20,7 @@ import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    private lateinit var exoPlayer: ExoPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,10 +38,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             title = ""
         })
 
+        // Inicializar ExoPlayer
+        exoPlayer = ExoPlayer.Builder(this).build().apply {
+            setMediaItem(MediaItem.fromUri("https://d3krfb04kdzji1.cloudfront.net/chorro-quevedo-video-ia.mp4"))
+            prepare()
+            playWhenReady = false
+            repeatMode = Player.REPEAT_MODE_ALL
+        }
+
         supportFragmentManager.commit {
-            add(R.id.containerFragment, MainFragment::class.java, Bundle())
+            add(R.id.containerFragment, MainFragment(exoPlayer))
+        }
+
+        supportFragmentManager.commit {
+            replace(R.id.containerFragment2, ReproductorFragment(exoPlayer))
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exoPlayer.release() // Liberar recursos del ExoPlayer
+    }
+
     fun Fragment.setFullScreen(
         fullScreen: Boolean = true,
         hideSystemBars: Boolean = true,
@@ -51,6 +73,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         )
     }
 }
+
 private fun Activity.setFullScreen(
     rootView: View,
     fullScreen: Boolean = true,
