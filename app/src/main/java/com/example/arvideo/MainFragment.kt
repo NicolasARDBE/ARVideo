@@ -57,7 +57,7 @@ class MainFragment(private val exoPlayer: ExoPlayer) : Fragment(R.layout.fragmen
                         size = Size(0.9f, 0.6f), // Ajusta el tamaño del video
                         normal = Direction(0.0f, 1.0f, 0.0f) // Apuntando hacia arriba
                     ).apply {
-                        position = Position(0.0f, 0.0f, 0.0f)
+                        position = Position(0.0f, 0.5f, 0.0f)
                     }
 
                     anchorNode.addChildNode(videoNode)
